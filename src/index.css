@@ -1,68 +1,35 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@theme {
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+    /* --color-*: initial; */
+    --color-bg: #030014;
+    --color-primary-blue: #0F0D23;
+    --color-blue-v1: #181966;
+    --color-blue-v2: #0F1167;
+    --color-title-gradient-start: #D6C7FF;
+    --color-title-gradient-finish: #AB8BFF;
+    --color-card-bg: #110F25;
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    --color-button-bg: #221F3D;
+    --color-button-text:#A8B5DB;
+
+
+    --font-dm-sans: DM Sans, sans-serif;
+    --font-bebas: Bebas Neue, sans-serif;
+
+
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+@layer components {
+    .headerPurpleGradient {
+        @apply bg-gradient-to-r from-title-gradient-start to-title-gradient-finish
+    }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+    .headerFontStyle {
+        @apply font-dm-sans font-bold text-[56px]
+    }
 }

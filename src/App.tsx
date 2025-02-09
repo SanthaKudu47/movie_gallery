@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import "./App.css";
+import Header from "./components/header";
+import AllMovies from "./components/header/PopularMovies";
+import { GlobalContext } from "./context/global.context";
+import getConfiguration from "./fetch/configuration";
+import { ConfigurationType } from "./types";
+import MovieInfo from "./components/movieInfo";
+import {
+  initialInfo,
+  MovieInfoDataContext,
+  MovieInfoDataContextDispatch,
+} from "./context/movie.info.context";
+import MovieInfoState from "./components/movieInfoState";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [configuration, setConfiguration] = useState<ConfigurationType | null>(
+    null
+  );
+  const [initial, setInfoState] = useState(initialInfo);
+  const handleConfigurationSettings = async function () {
+    const data = await getConfiguration();
+    if (!data) return;
+    setConfiguration(data);
+  };
+  useEffect(() => {
+    handleConfigurationSettings();
+  }, []);
+
+  const providerVal = useMemo(() => {
+    return {
+      ...initial,
+    };
+  }, [initial]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="fixed h-[20px]  z-20">
+        {/* <div className="flex relative top-0 left-0 justify-end">
+        button
+      </div> */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="bg-bg">
+        <Header />
+      </main>
+      <MovieInfoDataContextDispatch.Provider value={setInfoState}>
+        <section className="bg-bg" id="all_movies">
+          <GlobalContext.Provider value={configuration}>
+            <AllMovies />
+          </GlobalContext.Provider>
+        </section>
+        <div>
+          <MovieInfoDataContext.Provider value={providerVal}>
+            <GlobalContext.Provider value={configuration}>
+              <MovieInfo />
+            </GlobalContext.Provider>
+          </MovieInfoDataContext.Provider>
+        </div>
+      </MovieInfoDataContextDispatch.Provider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
