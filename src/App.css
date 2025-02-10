@@ -3,3 +3,11 @@ body {
     background-color: #030014;
     scroll-behavior: smooth;
 }
+
+iframe {
+
+    aspect-ratio: 16 / 9;
+    width: 100%;
+
+
+}

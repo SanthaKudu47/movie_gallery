@@ -10,6 +10,7 @@ import { GenreType } from "../../types";
 import placeHolder from "/place_holder.jpg";
 import { GlobalContext } from "../../context/global.context";
 import getTrailer from "../../fetch/trailer";
+import YoutubePlayer from "../youtubePlayer";
 
 function MovieInfo() {
   const { isModelOpen, movieInfo, genreList } =
@@ -68,76 +69,16 @@ function MovieInfo() {
     };
   };
 
-  const loadTrailerVideo = async function () {
-    if (!movieInfo) return;
-    const data = await getTrailer(movieInfo.id);
-    if (!data) return;
-    const { results } = data;
-    if (results.length > 0) {
-      const trailer = results[0].key;
-      configTrailer(trailer);
-    } else {
-    }
-  };
-
-  const configTrailer = function (key: string) {
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName("script")[0];
-    if (!firstScriptTag) return;
-    if (firstScriptTag.parentElement === null) return;
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-
-    type IUpdatedWindow = Window & typeof globalThis & { YT?: any };
-    let updatedWindow: IUpdatedWindow = window;
-
-    console.log(updatedWindow.YT);
-
-    let player: any;
-    function onYouTubeIframeAPIReady() {
-      player = new updatedWindow.YT.Player("player", {
-        height: "390",
-        width: "640",
-        videoId: key,
-        playerVars: {
-          playsinline: 1,
-        },
-        events: {
-          onReady: onPlayerReady,
-          //onStateChange: onPlayerStateChange,
-        },
-      });
-    }
-
-    function onPlayerReady(event: any) {
-      event.target.stopVideo();
-    }
-
-    var done = false;
-    function onPlayerStateChange(event: any) {
-      if (event.data == updatedWindow.YT.PlayerState.PLAYING && !done) {
-        setTimeout(stopVideo, 6000);
-        done = true;
-      }
-    }
-    function stopVideo() {
-      player.stopVideo();
-    }
-
-    onYouTubeIframeAPIReady();
-  };
-
   useEffect(() => {
     loadPlaceHolderImage();
-    loadTrailerVideo();
   }, [movieInfo?.title]);
 
   return (
     <>
       {isModelOpen && (
         <>
-          <div className="w-full h-full top-0 left-0 fixed z-20 bg-bg py-5 px-5 sm:px-10">
-            <div className=" relative min-w-[325px]  sm:min-w-[750px] max-w-[1200px] h-full mx-auto">
+          <div className="w-full h-full top-0 left-0 fixed z-20 bg-bg  overflow-scroll sm:flex justify-center items-center">
+            <div className="relative w-full  sm:min-w-[750px] max-w-[1200px] mx-auto h-[1200px] sm:h-[700px]">
               <div className="absolute opacity-40 min-w-[325px] top-0 left-0 right-0 bottom-0 z-0  sm:min-w-[750px] max-w-[1200px] h-full mx-auto bg-blue-700 blur-3xl"></div>
               <div className="relative bg-primary-blue w-full h-full flex z-10 rounded-md  flex-col">
                 <div className="flex flex-row px-5 py-2 justify-end items-center">
@@ -145,7 +86,7 @@ function MovieInfo() {
                     <IoMdCloseCircle onClick={closeModal} />
                   </div>
                 </div>
-                <div className="flex flex-row px-5 py-5 justify-between">
+                <div className="flex flex-col sm:flex-row px-5 py-5 justify-between gap-y-2">
                   <h4 className="font-dm-sans text-white font-semibold text-[25px]">
                     {movieInfo?.title}
                   </h4>
@@ -169,8 +110,8 @@ function MovieInfo() {
                   <span>{movieInfo?.popularity}</span>
                 </div>
 
-                <div className="py-2 px-5 grid grid-flow-col h-[580px] grid-cols-12 gap-x-5 overflow-hidden">
-                  <div className="col-span-3 rounded-md w-[250px] h-[350px]">
+                <div className="py-2 px-5 grid grid-flow-row sm:grid-flow-col h-full sm:h-[580px] grid-cols-1 sm:grid-cols-12 gap-x-5 overflow-hidden">
+                  <div className="col-span-1 sm:col-span-3 rounded-md w-[250px] h-[350px] mx-auto">
                     <img
                       src={src}
                       alt=""
@@ -178,11 +119,11 @@ function MovieInfo() {
                       loading="lazy"
                     />
                   </div>
-                  <div className="col-span-9 rounded-md flex justify-center items-center">
-                    <div id="player"/>
+                  <div className="col-span-1 sm:col-span-9  flex justify-center items-center w-full h-[300px] my-2">
+                    <YoutubePlayer movieId={movieInfo?.id} />
                   </div>
                 </div>
-                <div className="grid grid-cols-12 px-5 py-2">
+                <div className="grid grid-cols-1 sm:grid-cols-12 px-5 py-2 gap-y-2">
                   <div className="col-span-3 font-dm-sans text-button-text">
                     Generes
                   </div>
@@ -200,15 +141,15 @@ function MovieInfo() {
                     <></>
                   )}
                 </div>
-                <div className="grid grid-cols-12 px-5 py-2">
-                  <div className="col-span-3 font-dm-sans text-button-text">
+                <div className="grid  grid-cols-1 sm:grid-cols-12 px-5 py-2 gap-y-2">
+                  <div className="col-span-1 sm:col-span-3 font-dm-sans text-button-text">
                     Overview
                   </div>
-                  <div className="col-span-9 font-dm-sans text-white">
+                  <div className="col-span-1 sm:col-span-9 font-dm-sans text-white">
                     {movieInfo?.overview}
                   </div>
                 </div>
-                <div className="grid grid-cols-12 px-5 py-2">
+                <div className="grid grid-cols-1 sm:grid-cols-12 px-5 py-2 gap-y-2">
                   <div className="col-span-3 font-dm-sans text-button-text">
                     Language
                   </div>
